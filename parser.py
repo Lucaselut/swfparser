@@ -51,9 +51,9 @@ class Parser:
         return var
         
     def find_hash(self, var):
-        var1 = find_all(r"findproperty <q>\[(private|public)\](NULL|)(.*?)\n(.*?)pushstring \"(.*?)\"", var)[0]
+        var1 = find_all(r"findproperty <q>\[(private|public)\](NULL|)(.*?)\n(.*?)pushstring \"(.*?)\"", var)
         if var1 is not None:
-            return (var1[2], var1[4])
+            return (var1[0][2], var1[0][4])
         return ('', '')
         
     def find_var_lines(self, var, var1):
@@ -70,12 +70,12 @@ class Parser:
         var2 = {}
         for var3, var4 in enumerate(var):
             if '<q>[public]::Object <q>[private]NULL::' in var4:
-                var5 = find_all(r"<q>\[public\]::Object <q>\[private\]NULL::(.*?)=\(\)\(0 params, 0 optional\)", var4)[0]
+                var5 = find_all(r"<q>\[public\]::Object <q>\[private\]NULL::(.*?)=\(\)\(0 params, 0 optional\)", var4)
                 if var5 is not None:
-                    var6 = find_all(r"push(byte|short|int) (-?\d+)$", var[(var3 + 6)])[0]
+                    var6 = find_all(r"push(byte|short|int) (-?\d+)$", var[(var3 + 6)])
                     if var6 is not None:
-                        var6 = int(var6[1])
-                        var2[var5] = var1[var6]
+                        var6 = int(var6[0][1])
+                        var2[var5[0]] = var1[var6]
         return var2
         
     def parse_swf(self):
